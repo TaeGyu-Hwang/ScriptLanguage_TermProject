@@ -46,10 +46,10 @@ class TexasHoldemPoker:
         self.Again.place(x=700, y=500)
 
         # 새로운 단축키 버튼들
-        self.DButton = Button(self.window, text="D", width=2, height=1, font=self.fontstyle2, command=self.pressedDeal)
-        self.DButton.place(x=800, y=100)
-        self.AButton = Button(self.window, text="A", width=2, height=1, font=self.fontstyle2, command=self.pressedAgain)
-        self.AButton.place(x=800, y=150)
+        # self.DButton = Button(self.window, text="D", width=2, height=1, font=self.fontstyle2, command=self.pressedDeal)
+        # self.DButton.place(x=800, y=100)
+        # self.AButton = Button(self.window, text="A", width=2, height=1, font=self.fontstyle2, command=self.pressedAgain)
+        # self.AButton.place(x=800, y=150)
 
         self.Deal['state'] = 'disabled'
         self.Deal['bg'] = 'gray'
@@ -91,7 +91,8 @@ class TexasHoldemPoker:
             self.Bx1['bg'] = 'gray'
             self.Bx2['state'] = 'disabled'
             self.Bx2['bg'] = 'gray'
-            #PlaySound('sounds/chip.wav', SND_FILENAME)
+            # PlaySound('sounds/chip.wav', SND_FILENAME)
+            PlaySound('sounds/chip.wav', SND_FILENAME | SND_ASYNC)
 
     def pressedBx1(self):
         bm = self.betMoney
@@ -108,7 +109,8 @@ class TexasHoldemPoker:
             self.Bx1['bg'] = 'gray'
             self.Bx2['state'] = 'disabled'
             self.Bx2['bg'] = 'gray'
-            #PlaySound('sounds/chip.wav', SND_FILENAME)
+            # PlaySound('sounds/chip.wav', SND_FILENAME)
+            PlaySound('sounds/chip.wav', SND_FILENAME | SND_ASYNC)
         else:
             self.betMoney -= bm
 
@@ -127,7 +129,8 @@ class TexasHoldemPoker:
             self.Bx1['bg'] = 'gray'
             self.Bx2['state'] = 'disabled'
             self.Bx2['bg'] = 'gray'
-            #PlaySound('sounds/chip.wav', SND_FILENAME)
+            # PlaySound('sounds/chip.wav', SND_FILENAME)
+            PlaySound('sounds/chip.wav', SND_FILENAME | SND_ASYNC)
         else:
             self.betMoney -= bm
 
@@ -183,7 +186,8 @@ class TexasHoldemPoker:
         # 파이썬은 라벨 이미지 레퍼런스를 갖고 있어야 이미지가 보임
         self.LcardsDealer[self.dealer.inHand() - 1].image = p
         self.LcardsDealer[self.dealer.inHand() - 1].place(x=50 + n * 80, y=70)
-        #PlaySound('sounds/cardFlip1.wav', SND_FILENAME)
+        # PlaySound('sounds/cardFlip1.wav', SND_FILENAME)
+        PlaySound('sounds/cardFlip1.wav', SND_FILENAME | SND_ASYNC)
 
     def hitShared(self):
         self.nCardsShared += 1
@@ -194,7 +198,8 @@ class TexasHoldemPoker:
         self.LcardsShared.append(Label(self.window, image=p))
         self.LcardsShared[self.shared.inHand() - 1].image = p
         self.LcardsShared[self.shared.inHand() - 1].place(x=80 + self.nCardsShared * 80, y=210)
-        #PlaySound('sounds/cardFlip1.wav', SND_FILENAME)
+        # PlaySound('sounds/cardFlip1.wav', SND_FILENAME)
+        PlaySound('sounds/cardFlip1.wav', SND_FILENAME | SND_ASYNC)
 
     def pressedDeal(self):
         self.deal()
@@ -229,6 +234,9 @@ class TexasHoldemPoker:
         self.Deal['bg'] = 'gray'
         self.Again['state'] = 'disabled'
         self.Again['bg'] = 'gray'
+
+        # ding.wav 사운드 재생 추가
+        PlaySound('sounds/ding.wav', SND_FILENAME | SND_ASYNC)
 
     # RANK의 인덱스 반환
     def checkUserCard(self, user):
@@ -350,37 +358,45 @@ class TexasHoldemPoker:
 
         playerResult = self.checkUserCard(self.player)
         dealerResult = self.checkUserCard(self.dealer)
-        p = playerResult[1]
-        d = dealerResult[1]
+        p = playerResult[1] + 1
+        d = dealerResult[1] + 1
         if p == 14:
             p = 1
         if d == 14:
             d = 1
 
-        self.LplayerRank.configure(text=(RANK[playerResult[0]]+str(p)))
-        self.LdealerRank.configure(text=(RANK[dealerResult[0]]+str(d)))
+        self.LplayerRank.configure(text=(RANK[playerResult[0]] + str(p)))
+        self.LdealerRank.configure(text=(RANK[dealerResult[0]] + str(d)))
 
-        print(playerResult[0]," ",playerResult[1]," ",dealerResult[0]," ",dealerResult[1])
+        print(playerResult[0], " ", playerResult[1], " ", dealerResult[0], " ", dealerResult[1])
         if playerResult[0] > dealerResult[0]:
             self.Lstatus.configure(text="Win")
             self.playerMoney += self.betMoney
             self.playerMoney += self.betMoney
-            #PlaySound('sounds/wrong.wav', SND_FILENAME)
+            # PlaySound('sounds/win.wav', SND_FILENAME)
+            PlaySound('sounds/win.wav', SND_FILENAME | SND_ASYNC)
         elif playerResult[0] < dealerResult[0]:
             self.Lstatus.configure(text="Lose")
-            #PlaySound('sounds/win.wav', SND_FILENAME)
+            # PlaySound('sounds/wrong.wav', SND_FILENAME)
+            PlaySound('sounds/wrong.wav', SND_FILENAME | SND_ASYNC)
         else:
             if playerResult[1] == 1:
-                p= 14
+                p = 14
                 print("player have 1")
             if dealerResult[1] == 1:
-                d= 14
+                d = 14
                 print("dealer have 1")
             if p > d:
                 self.Lstatus.configure(text="Win")
+                PlaySound('sounds/win.wav', SND_FILENAME | SND_ASYNC)
                 self.playerMoney += self.betMoney
-            else:
+                self.playerMoney += self.betMoney
+            elif p < d:
                 self.Lstatus.configure(text="Lose")
+                PlaySound('sounds/wrong.wav', SND_FILENAME | SND_ASYNC)
+            else:
+                self.Lstatus.configure(text="Draw")
+                self.playerMoney += self.betMoney
 
         self.Check['state'] = 'disabled'
         self.Check['bg'] = 'gray'
