@@ -180,6 +180,10 @@ def onSearch():  # command for search button
     SearchHospital(clist[cIdx])
 
 
+def getStr(s):  # utitlity function: 문자열 내용 있을 때만 사용
+    return '정보없음' if not s else s
+
+
 def saveMemo():  # 메모를 저장해 서버로 넘기는 함수
     if server.hospital_name:
         server.memo_text = memoST.get("1.0", END)
@@ -251,7 +255,6 @@ def event_for_listbox(event):  # command for list box
         ST.configure(state="disabled")  # 수정 불가능(읽기 전용)으로 변경
 
 
-
 def SearchHospital(city=''):  # 리스트 박스 구성을 위해 동물병원 목록을 만드는 함수
     global listBox
     listBox.delete(0, listBox.size())
@@ -292,11 +295,6 @@ def SearchHospital(city=''):  # 리스트 박스 구성을 위해 동물병원 �
             break
 
         page += 1
-
-
-
-def getStr(s):  # utitlity function: 문자열 내용 있을 때만 사용
-    return '정보없음' if not s else s
 
 
 if __name__ == '__main__':

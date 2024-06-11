@@ -1,6 +1,16 @@
 '''
 telegram_bot.py
 텔레그램 메인 모듈
+
+functions
+- getStr
+- getData
+- getBookMark
+- findHospital
+- addBookMark
+- sendMessage
+- replyAptData
+- handle
 '''
 
 # === import ===
@@ -48,7 +58,7 @@ def getData(loc_param):  # 인자에 따라 RESTAPI에서 데이터를 가져옴
             res_list.append(info)
     return res_list
 
-def getBookMark(chat_id):  # 피클 모듈을 사용해 북마크 목록 불러와 전송하는 함수
+def getBookMark(chat_id):  # 피클 모듈을 사용해 즐겨찾기 목록 불러와 전송하는 함수
     dirpath = os.getcwd()
     if os.path.isfile(dirpath + '\mark'):
         f = open('mark', 'rb')
@@ -84,7 +94,7 @@ def findHospital(chat_id, name):  # 원하는 이름의 동물병원을 검색�
     else:
         sendMessage(chat_id, text)
 
-def addBookMark(chat_id, name):  # 북마크에 입력한 동물병원 정보를 추가하는 함수
+def addBookMark(chat_id, name):  # 즐겨찾기에 입력한 동물병원 정보를 추가하는 함수
     key = "b40a9f7c2d06486a83a9fdbfa6e3437e"
     url = "https://openapi.gg.go.kr/Animalhosptl?pSize=1000&pIndex=1&KEY=" + key
 
@@ -133,7 +143,7 @@ def addBookMark(chat_id, name):  # 북마크에 입력한 동물병원 정보를
 
         print(server.MarkDict)
 
-    sendMessage(chat_id, '해당 동물병원을 북마크에 성공적으로 추가했습니다')
+    sendMessage(chat_id, '해당 동물병원을 즐겨찾기에 성공적으로 추가했습니다')
 
 def sendMessage(user, msg):  # 메시지 전송 함수
     try:
@@ -178,8 +188,8 @@ def handle(msg):  # 대화에 반응하는 함수
     elif text.startswith('검색') and len(args) > 1:
         print('try to 검색', args[1])
         findHospital(chat_id, args[1])
-    elif text.startswith('북마크'):
-        print('try to 북마크')
+    elif text.startswith('즐겨찾기'):
+        print('try to 즐겨찾기')
         getBookMark(chat_id)
     elif text.startswith('저장') and len(args) > 1:
         print('try to 저장', args[1])
@@ -188,13 +198,13 @@ def handle(msg):  # 대화에 반응하는 함수
         guide = "1. '도움말'을 입력해 명령어를 찾아볼 수 있습니다. \n\n2. 검색 + '동물병원명'으로 검색하면 해당 동물병원 정보를 출력합니다.\n예) 검색 가평동물병원\
             \n\n3. 시군 + '지역명'으로 검색하면 지역 내에 있는 동물병원을 모두 출력합니다.\n예) 시군 시흥시\
             \n지원하는 지역명: '가평군', '고양시', '과천시', '광명시', '광주시', '구리시', '군포시', '김포시', '남양주시', '동두천시', '부천시', '성남시', '수원시', '시흥시', '안산시', '안성시', '안양시', '양주시', '양평군', '여주시', '연천군', '오산시', '용인시', '의왕시', '의정부시', '이천시', '파주시', '평택시', '포천시', '하남시', '화성시'\
-            \n\n4. '북마크'를 입력해 내 북마크에 저장된 동물병원 정보를 볼 수 있습니다.\n\n5. 저장 + '동물병원명'으로 입력하면 북마크에 동물병원을 저장할 수 있습니다. \n예) 저장 가평동물병원"
+            \n\n4. '즐겨찾기'를 입력해 내 즐겨찾기에 저장된 동물병원 정보를 볼 수 있습니다.\n\n5. 저장 + '동물병원명'으로 입력하면 즐겨찾기에 동물병원을 저장할 수 있습니다. \n예) 저장 가평동물병원"
         sendMessage(chat_id, guide)
     else:
         guide = "1. '도움말'을 입력해 명령어를 찾아볼 수 있습니다. \n\n2. 검색 + '동물병원명'으로 검색하면 해당 동물병원 정보를 출력합니다.\n예) 검색 가평동물병원\
             \n\n3. 시군 + '지역명'으로 검색하면 지역 내에 있는 동물병원을 모두 출력합니다.\n예) 시군 시흥시\
             \n지원하는 지역명: '가평군', '고양시', '과천시', '광명시', '광주시', '구리시', '군포시', '김포시', '남양주시', '동두천시', '부천시', '성남시', '수원시', '시흥시', '안산시', '안성시', '안양시', '양주시', '양평군', '여주시', '연천군', '오산시', '용인시', '의왕시', '의정부시', '이천시', '파주시', '평택시', '포천시', '하남시', '화성시'\
-            \n\n4. '북마크'를 입력해 내 북마크에 저장된 동물병원 정보를 볼 수 있습니다.\n\n5. 저장 + '동물병원명'으로 입력하면 북마크에 동물병원을 저장할 수 있습니다. \n예) 저장 가평동물병원"
+            \n\n4. '즐겨찾기'를 입력해 내 즐겨찾기에 저장된 동물병원 정보를 볼 수 있습니다.\n\n5. 저장 + '동물병원명'으로 입력하면 즐겨찾기에 동물병원을 저장할 수 있습니다. \n예) 저장 가평동물병원"
         sendMessage(chat_id, guide)
 
 today = date.today()

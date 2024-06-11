@@ -42,7 +42,7 @@ fontList = font.Font(window, size=14, family='G마켓 산스 TTF Medium')
 info_text = None        # 동물병원 정보
 hospital_name = None    # 동물병원 이름
 memo_text = None        # 메모
-MarkDict = dict()       # 북마크 dict {동물병원명:동물병원정보}
+MarkDict = dict()       # 즐겨찾기 dict {동물병원명:동물병원정보}
 
 latitude = 0.0      # 위도
 longitude = 0.0     # 경도
