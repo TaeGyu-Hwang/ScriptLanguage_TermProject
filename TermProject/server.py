@@ -3,6 +3,9 @@ server.py
 모듈 간 데이터의 공유를 돕는 모듈입니다.
 함수가 아닌 객체들로만 구성되어있습니다.
 각 모듈에서 단순히 server를 import하면 필요한 정보를 제공받을 수 있습니다.
+
+functions
+- center_window
 '''
 
 from tkinter import *
@@ -14,6 +17,17 @@ window.title("가까운 동물병원")
 window.geometry("800x600+450+200")
 window.resizable(False, False)
 window.configure(bg='white')
+
+# === center window ===
+def center_window(win):
+    win.update_idletasks()
+    width = win.winfo_width()
+    height = win.winfo_height()
+    x = (win.winfo_screenwidth() // 2) - (width // 2)
+    y = (win.winfo_screenheight() // 2) - (height // 2) - 77
+    win.geometry(f'{width}x{height}+{x}+{y}')
+
+center_window(window)
 
 # === load image ===
 searchImage = PhotoImage(file='image/search.png')               # search image
