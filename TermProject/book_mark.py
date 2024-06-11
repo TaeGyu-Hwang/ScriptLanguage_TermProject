@@ -1,6 +1,6 @@
 '''
 book_mark.py
-런처에서 북마크 버튼을 누르면 실행되는 모듈입니다.
+런처에서 즐겨찾기 버튼을 누르면 실행되는 모듈입니다.
 
 functions
 - onMarkPopup
@@ -10,7 +10,7 @@ functions
 '''
 
 # === import ===
-import pickle   # 피클 모듈을 사용한 북마크
+import pickle   # 피클 모듈을 사용한 즐겨찾기
 from click import command
 import server
 import tkinter.messagebox as msgbox
@@ -28,18 +28,18 @@ except:
 selHospital = None
 
 # === functions ===
-def onMarkPopup():  # 북마크 팝업을 띄움
+def onMarkPopup():  # 즐겨찾기 팝업을 띄움
     global popup
-    print("북마크 버튼 클릭됨")
+    print("즐겨찾기 버튼 클릭됨")
     popup = Toplevel()
     popup.geometry("800x370+450+200")
-    popup.title("북마크")
+    popup.title("즐겨찾기")
     popup.resizable(False, False)
 
     fontInfo = font.Font(popup, size=10, family='G마켓 산스 TTF Medium')
     fontList = font.Font(popup, size=14, family='G마켓 산스 TTF Medium')
 
-    # 북마크 동물병원 목록 리스트박스
+    # 즐겨찾기 동물병원 목록 리스트박스
     global listBox
     ListScrollBar = Scrollbar(popup)
     listBox = Listbox(popup, selectmode='extended', font=fontList, width=10, height=15, \
@@ -72,13 +72,13 @@ def onMarkPopup():  # 북마크 팝업을 띄움
 
     # 선택된 동물병원 삭제 버튼
     global deleteButton
-    deleteButton = Button(popup, font=fontList, text='북마크에서 해당 동물병원 제외하기', command=deleteHospital)
+    deleteButton = Button(popup, font=fontList, text='즐겨찾기에서 해당 동물병원 제외하기', command=deleteHospital)
     deleteButton.place(x = 0, y = 340, width=800, height=30)
 
-def deleteHospital():       # 북마크에서 선택된 동물병원을 삭제하는 함수
+def deleteHospital():       # 즐겨찾기에서 선택된 동물병원을 삭제하는 함수
     global ST
-    if len(server.MarkDict) == 0:   # 북마크가 빈 상태에서 삭제 버튼을 누른 경우
-        msgbox.showinfo("알림", "북마크가 비어있습니다.")
+    if len(server.MarkDict) == 0:   # 즐겨찾기가 빈 상태에서 삭제 버튼을 누른 경우
+        msgbox.showinfo("알림", "즐겨찾기가 비어있습니다.")
         popup.focus_set()
     else:
         if selHospital in server.MarkDict:
@@ -105,11 +105,11 @@ def showInfo(event):   # 동물병원 리스트박스에서 동물병원 선택 
             ST.configure(state="disabled")  # 수정 불가능(읽기 전용)으로 변경
 
 def makeBookMark():
-    # 북마크를 추가하는 함수
-    # 런쳐 노트북 3페이지에서 북마크 저장 버튼을 눌렀을 시 실행
+    # 즐겨찾기를 추가하는 함수
+    # 런쳐 노트북 3페이지에서 즐겨찾기 저장 버튼을 눌렀을 시 실행
     if server.hospital_name:
         if server.hospital_name in server.MarkDict:
-            msgbox.showinfo("알림", "이미 북마크에 추가한 동물병원입니다.")
+            msgbox.showinfo("알림", "이미 즐겨찾기에 추가한 동물병원입니다.")
 
         else:
             text = server.info_text + '\n\n' + '[MEMO]' + '\n' + server.memo_text
@@ -143,10 +143,10 @@ def makeBookMark():
 
             # C/C++ 연동
             try:        # cLink.pyd 파일을 Lib에 추가시킨 경우
-                text = "성공적으로 북마크를 저장했습니다.\n메모 글자수: " + str(cLink.strlen(server.memo_text)) + "자"
+                text = "성공적으로 즐겨찾기를 저장했습니다.\n메모 글자수: " + str(cLink.strlen(server.memo_text)) + "자"
                 msgbox.showinfo("알림", text)
             except:     # cLink.pyd 파일을 Lib에 추가시키지 않은 경우
-                msgbox.showinfo("알림", "성공적으로 북마크를 저장했습니다.")
+                msgbox.showinfo("알림", "성공적으로 즐겨찾기를 저장했습니다.")
 
     else:   # 예외 처리
         msgbox.showinfo("알림", "목록에서 동물병원을 먼저 선택해주십시오.")

@@ -126,11 +126,11 @@ def InitScreen():  # 메인 GUI 창을 시작하는 함수
 
     # notebook page1: 병원 정보 출력
     ST = st.ScrolledText(window, font=server.fontInfo, cursor="arrow")
-    notebook.add(ST, text="Info")
+    notebook.add(ST, text="정보")
 
     # notebook page2: 링크 모음
     frame2 = Frame(window, background='white', relief='flat', borderwidth=0)
-    notebook.add(frame2, text="Link")
+    notebook.add(frame2, text="링크")
     link1 = Button(frame2, image=server.googleLinkImage, bg='white', relief="flat", command=onGoogleLink,
                    cursor="hand2")
     link2 = Button(frame2, image=server.naverImage, bg='white', relief="flat", command=onNaverLink, cursor="hand2")
@@ -146,9 +146,9 @@ def InitScreen():  # 메인 GUI 창을 시작하는 함수
     frame3 = Frame(window, background='white', relief='flat', borderwidth=0)
     memoST = st.ScrolledText(frame3, relief='raised', font=server.fontInfo)
     memoST.place(x=0, y=0, width=398, height=366)
-    memoButton = Button(frame3, text='북마크 저장', command=saveMemo, font=server.fontInfo, cursor="hand2")
+    memoButton = Button(frame3, text='즐겨찾기 저장', command=saveMemo, font=server.fontInfo, cursor="hand2")
     memoButton.place(x=0, y=366, width=398, height=30)
-    notebook.add(frame3, text="BookMark")
+    notebook.add(frame3, text="즐겨찾기")
 
     # bookmark data load
     dirpath = os.getcwd()
@@ -235,7 +235,7 @@ def event_for_listbox(event):  # command for list box
 
             page += 1
 
-        # 북마크 여부 표시
+        # 즐겨찾기 여부 표시
         if data in server.MarkDict:
             MarkButton.configure(image=server.markImage)
         else:
