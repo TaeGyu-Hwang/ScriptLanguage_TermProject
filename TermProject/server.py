@@ -19,7 +19,7 @@ if not any(arg in sys.argv for arg in ('--no-gui', '-ng')) and 'telegram_bot' no
     window.title("가까운 동물병원")
     window.geometry("800x600+450+200")
     window.resizable(False, False)
-    window.configure(bg='white')
+    window.configure(bg='#FAEBD7')
 else:
     window = None
 

@@ -42,7 +42,7 @@ def InitScreen():  # 메인 GUI 창을 시작하는 함수
     title_frame = Frame(window, bg="white", relief="solid", bd=2)
     title_frame.place(x=395, y=10, width=318, height=72)  # GaggunPet 텍스트를 감싸는 박스
 
-    title = Label(title_frame, text="GaggunPet", font=server.fontGaggunPet, bg="white", anchor="center")
+    title = Label(title_frame, text="Gaggun Pet", font=server.fontGaggunPet, bg="white", anchor="center")
     title.place(relx=0.5, rely=0.5, anchor="center", width=240, height=60)  # 텍스트를 박스 안에 위치
 
     logo_button = Button(window, image=server.logoImage, bg="white", command=onLogo, cursor="hand2", relief="solid",
@@ -78,7 +78,7 @@ def InitScreen():  # 메인 GUI 창을 시작하는 함수
 
     # 시(군) 선택 부분
     global CityLabel, CityListBox, clist
-    CityLabel = Label(window, text="시/군", font=("Helvetica", 30), bg="white", image=server.labelImage, compound='center')
+    CityLabel = Label(window, text="시/군", font=("Helvetica", 30), bg="ivory", image=server.labelImage, compound='center')
     CityLabel.place(x=10, y=10, width=100, height=70)
 
     CityScrollbar = Scrollbar(window)
