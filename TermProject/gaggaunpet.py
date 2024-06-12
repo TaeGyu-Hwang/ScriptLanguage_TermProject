@@ -78,7 +78,7 @@ def InitScreen():  # 메인 GUI 창을 시작하는 함수
 
     # 시(군) 선택 부분
     global CityLabel, CityListBox, clist
-    CityLabel = Label(window, text="시/군", font=server.fontNormal, bg="white", image=server.labelImage, compound='center')
+    CityLabel = Label(window, text="시/군", font=("Helvetica", 30), bg="white", image=server.labelImage, compound='center')
     CityLabel.place(x=10, y=10, width=100, height=70)
 
     CityScrollbar = Scrollbar(window)
