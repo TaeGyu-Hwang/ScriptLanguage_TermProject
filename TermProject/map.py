@@ -21,20 +21,21 @@ from tkinter import messagebox
 
 # C 모듈 임포트
 try:
-    import distance
-except ImportError:
-    distance = None
+    import cLink
+    print("cLink 모듈이 성공적으로 임포트되었습니다.")
+except ImportError as e:
+    cLink = None
+    print(f"cLink 모듈을 임포트하는 데 실패했습니다: {e}")
 
 # === load image ===
 hospitalImage = PhotoImage(file='image/hospital.png')  # 병원 아이콘
 searchImage = PhotoImage(file='image/little_search.png')  # 돋보기 아이콘
 
-
 # === functions ===
 def onMapPopup():
     # 런처에서 지도 버튼을 누를 경우 실행
     # 선택한 병원의 지도를 보여주는 팝업을 띄움
-    if server.hospital_name == None:  # 예외처리: 사용자가 병원을 선택하지 않고, 버튼을 누를 경우
+    if server.hospital_name is None:  # 예외처리: 사용자가 병원을 선택하지 않고, 버튼을 누를 경우
         msgbox.showinfo("알림", "목록에서 병원을 먼저 선택해주십시오.")
         return
 
@@ -48,7 +49,6 @@ def onMapPopup():
     if server.latitude == 0 and server.longitude == 0:  # API에서 병원의 주소 정보를 제공하지 않는 경우
         emptyLabel = Label(popup, width=800, height=600, text="해당 병원의 지도 정보가 없습니다.", font=fontNormal)
         emptyLabel.pack()
-
     else:
         global map_widget, marker_1
         map_widget = tkintermapview.TkinterMapView(popup, width=800, height=550, corner_radius=0)
@@ -76,7 +76,6 @@ def onMapPopup():
 
         map_widget.set_zoom(15)  # 0~19 (19 is the highest zoom level)
 
-
 def get_coordinates(address):
     try:
         url = f"https://nominatim.openstreetmap.org/search"
@@ -101,7 +100,6 @@ def get_coordinates(address):
         print(f"Error fetching coordinates: {e}")
         return None, None
 
-
 def onSearch():
     # 지도 팝업에서 주소 입력 시 실행
     # 새 주소에 마커 추가
@@ -122,21 +120,40 @@ def onSearch():
 
     addressLabel.delete(0, 'end')
 
-
 def onHospital():  # 원래 병원 위치로 이동하는 함수
     map_widget.set_zoom(15)
     map_widget.set_position(marker_1.position[0], marker_1.position[1])
-
 
 def add_marker_event(coords):  # 마우스 우클릭으로 마커를 추가하는 함수
     print("위치 추가:", coords)
     new_marker = map_widget.set_marker(coords[0], coords[1], text="현재 위치")
     map_widget.set_path([coords, marker_1.position])
 
-    if distance is not None:
-        dist = distance.haversine(server.latitude, server.longitude, coords[0], coords[1])
-        msgbox.showinfo("거리 계산", f"동물병원과 추가된 위치 사이의 거리: {dist:.2f} km")
+    if cLink is not None:
+        try:
+            print(f"Calculating distance from ({server.latitude}, {server.longitude}) to {coords}")
+            dist = cLink.calculate_distance(server.latitude, server.longitude, coords[0], coords[1])
+            print(f"Calculated distance: {dist:.2f} km")
 
+            # 경로 중간에 텍스트로 거리 표시
+            mid_lat = (server.latitude + coords[0]) / 2
+            mid_lon = (server.longitude + coords[1]) / 2
+
+            # 마커 위치를 약간 아래로 조정
+            offset_lat = 0.002  # 위치 조정량 (필요에 따라 조정)
+
+            # 거리 표시 마커 추가 (투명 마커 사용)
+            distance_marker = map_widget.set_marker(
+                mid_lat - offset_lat, mid_lon, text=f"{dist:.2f} km",
+                marker_color_outside="",  # 투명한 색상
+                marker_color_circle="",  # 투명한 색상
+                text_color="black"
+            )
+
+        except Exception as e:
+            import traceback
+            print(f"Error occurred: {e}\n{traceback.format_exc()}")
+            messagebox.showerror("오류", f"거리 계산 중 오류가 발생했습니다: {e}\n{traceback.format_exc()}")
 
 if __name__ == '__main__':
     print("map.py runned\n")

@@ -1,0 +1,6 @@
+setup.py
+C:/Users/user/OneDrive/taegyu/GitHub/ScriptLanguage_TermProject/TermProject/cLink/cLink/cLinkModule.c
+cLink.egg-info/PKG-INFO
+cLink.egg-info/SOURCES.txt
+cLink.egg-info/dependency_links.txt
+cLink.egg-info/top_level.txt
