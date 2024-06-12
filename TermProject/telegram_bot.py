@@ -15,6 +15,7 @@ functions
 
 # === import ===
 import sys
+sys.argv.append('from_telegram_bot')
 from pprint import pprint  # 데이터를 읽기 쉽게 출력
 from urllib.request import urlopen
 import traceback
@@ -68,80 +69,99 @@ def getBookMark(chat_id):  # 피클 모듈을 사용해 즐겨찾기 목록 불�
         for value in dic.values():
             sendMessage(chat_id, value)
 
-def findHospital(chat_id, name):  # 원하는 이름의 동물병원을 검색한 뒤, 결과를 보내는 함수
+def findHospital(chat_id, name):
     key = "b40a9f7c2d06486a83a9fdbfa6e3437e"
-    url = "https://openapi.gg.go.kr/Animalhosptl?pSize=1000&pIndex=1&KEY=" + key
-
-    res_body = urlopen(url).read()
-    strXml = res_body.decode('utf-8')
-    tree = ElementTree.fromstring(strXml)
-
-    elements = tree.iter("row")
-
+    page = 1
     text = "null"
-    for item in elements:  # 'row' element들
-        if item.find('BIZPLC_NM').text == name and item.find('BSN_STATE_NM').text == '정상':
-            text = '[동물병원명]\n' + getStr(item.find('BIZPLC_NM').text) + \
-                   '\n\n[상태]\n' + getStr(item.find('BSN_STATE_NM').text) + \
-                   '\n\n[전화번호]\n' + getStr(item.find('LOCPLC_FACLT_TELNO').text) + \
-                   '\n\n[도로명 주소]\n' + getStr(item.find('REFINE_ROADNM_ADDR').text) + \
-                   '\n\n[지번 주소]\n' + getStr(item.find('REFINE_LOTNO_ADDR').text)
-            server.hospital_name = getStr(item.find('BIZPLC_NM').text)
+
+    while True:
+        url = f"https://openapi.gg.go.kr/Animalhosptl?pSize=1000&pIndex={page}&KEY={key}"
+        res_body = urlopen(url).read()
+        strXml = res_body.decode('utf-8')
+        tree = ElementTree.fromstring(strXml)
+
+        elements = tree.iter("row")
+
+        count = 0
+        for item in elements:  # 'row' element들
+            count += 1
+            if item.find('BIZPLC_NM').text == name and item.find('BSN_STATE_NM').text == '정상':
+                text = '[동물병원명]\n' + getStr(item.find('BIZPLC_NM').text) + \
+                       '\n\n[상태]\n' + getStr(item.find('BSN_STATE_NM').text) + \
+                       '\n\n[전화번호]\n' + getStr(item.find('LOCPLC_FACLT_TELNO').text) + \
+                       '\n\n[도로명 주소]\n' + getStr(item.find('REFINE_ROADNM_ADDR').text) + \
+                       '\n\n[지번 주소]\n' + getStr(item.find('REFINE_LOTNO_ADDR').text)
+                server.hospital_name = getStr(item.find('BIZPLC_NM').text)
+                print(f"Found hospital: {text}")
+                break
+
+        if text != "null" or count < 1000:
+            break
+
+        page += 1
 
     if text == "null":  # 예외 처리: API에 없는 동물병원을 입력했을 시
         sendMessage(chat_id, '해당 동물병원은 존재하지 않습니다')
-        return
+        print("Hospital not found")
     else:
         sendMessage(chat_id, text)
 
-def addBookMark(chat_id, name):  # 즐겨찾기에 입력한 동물병원 정보를 추가하는 함수
+def addBookMark(chat_id, name):
     key = "b40a9f7c2d06486a83a9fdbfa6e3437e"
-    url = "https://openapi.gg.go.kr/Animalhosptl?pSize=1000&pIndex=1&KEY=" + key
-
-    res_body = urlopen(url).read()
-    strXml = res_body.decode('utf-8')
-    tree = ElementTree.fromstring(strXml)
-
-    elements = tree.iter("row")
-
+    page = 1
     text = "null"
-    for item in elements:  # 'row' element들
-        if item.find('BIZPLC_NM').text == name and item.find('BSN_STATE_NM').text == '정상':
-            text = '[동물병원명]\n' + getStr(item.find('BIZPLC_NM').text) + \
-                   '\n\n[상태]\n' + getStr(item.find('BSN_STATE_NM').text) + \
-                   '\n\n[전화번호]\n' + getStr(item.find('LOCPLC_FACLT_TELNO').text) + \
-                   '\n\n[도로명 주소]\n' + getStr(item.find('REFINE_ROADNM_ADDR').text) + \
-                   '\n\n[지번 주소]\n' + getStr(item.find('REFINE_LOTNO_ADDR').text)
-            server.hospital_name = getStr(item.find('BIZPLC_NM').text)
+
+    while True:
+        url = f"https://openapi.gg.go.kr/Animalhosptl?pSize=1000&pIndex={page}&KEY={key}"
+        res_body = urlopen(url).read()
+        strXml = res_body.decode('utf-8')
+        tree = ElementTree.fromstring(strXml)
+
+        elements = tree.iter("row")
+
+        count = 0
+        for item in elements:  # 'row' element들
+            count += 1
+            if item.find('BIZPLC_NM').text == name and item.find('BSN_STATE_NM').text == '정상':
+                text = '[동물병원명]\n' + getStr(item.find('BIZPLC_NM').text) + \
+                       '\n\n[상태]\n' + getStr(item.find('BSN_STATE_NM').text) + \
+                       '\n\n[전화번호]\n' + getStr(item.find('LOCPLC_FACLT_TELNO').text) + \
+                       '\n\n[도로명 주소]\n' + getStr(item.find('REFINE_ROADNM_ADDR').text) + \
+                       '\n\n[지번 주소]\n' + getStr(item.find('REFINE_LOTNO_ADDR').text)
+                server.hospital_name = getStr(item.find('BIZPLC_NM').text)
+                print(f"Found hospital to bookmark: {text}")
+                break
+
+        if text != "null" or count < 1000:
+            break
+
+        page += 1
 
     if text == "null":  # 예외 처리: API에 없는 동물병원을 입력했을 시
         sendMessage(chat_id, '해당 동물병원은 존재하지 않습니다')
+        print("Hospital not found for bookmark")
         return
 
     dirpath = os.getcwd()
     if os.path.isfile(dirpath + '\mark'):
-        f = open('mark', 'rb')
-        server.MarkDict = pickle.load(f)
-        f.close()
+        with open('mark', 'rb') as f:
+            server.MarkDict = pickle.load(f)
 
         server.MarkDict[server.hospital_name] = text
 
-        f = open('mark', 'wb')
-        pickle.dump(server.MarkDict, f)
-        f.close()
+        with open('mark', 'wb') as f:
+            pickle.dump(server.MarkDict, f)
 
-        f = open('mark', 'rb')
-        server.MarkDict = pickle.load(f)
-        f.close()
+        with open('mark', 'rb') as f:
+            server.MarkDict = pickle.load(f)
 
-        print(server.MarkDict)
+        print(f"Updated bookmark dictionary: {server.MarkDict}")
     else:
         server.MarkDict[server.hospital_name] = text
-        f = open('mark', 'wb')
-        pickle.dump(server.MarkDict, f)
-        f.close()
+        with open('mark', 'wb') as f:
+            pickle.dump(server.MarkDict, f)
 
-        print(server.MarkDict)
+        print(f"Created new bookmark dictionary: {server.MarkDict}")
 
     sendMessage(chat_id, '해당 동물병원을 즐겨찾기에 성공적으로 추가했습니다')
 
@@ -195,16 +215,24 @@ def handle(msg):  # 대화에 반응하는 함수
         print('try to 저장', args[1])
         addBookMark(chat_id, args[1])
     elif text.startswith('도움말'):
-        guide = "1. '도움말'을 입력해 명령어를 찾아볼 수 있습니다. \n\n2. 검색 + '동물병원명'으로 검색하면 해당 동물병원 정보를 출력합니다.\n예) 검색 가평동물병원\
-            \n\n3. 시군 + '지역명'으로 검색하면 지역 내에 있는 동물병원을 모두 출력합니다.\n예) 시군 시흥시\
-            \n지원하는 지역명: '가평군', '고양시', '과천시', '광명시', '광주시', '구리시', '군포시', '김포시', '남양주시', '동두천시', '부천시', '성남시', '수원시', '시흥시', '안산시', '안성시', '안양시', '양주시', '양평군', '여주시', '연천군', '오산시', '용인시', '의왕시', '의정부시', '이천시', '파주시', '평택시', '포천시', '하남시', '화성시'\
-            \n\n4. '즐겨찾기'를 입력해 내 즐겨찾기에 저장된 동물병원 정보를 볼 수 있습니다.\n\n5. 저장 + '동물병원명'으로 입력하면 즐겨찾기에 동물병원을 저장할 수 있습니다. \n예) 저장 가평동물병원"
+        guide = ("1. '도움말'을 입력해 명령어를 찾아볼 수 있습니다. \n\n"
+                 "2. 검색 + '동물병원명'으로 검색하면 해당 동물병원 정보를 출력합니다.\n예) 검색 가평동물병원\n\n"
+                 "3. 시군 + '지역명'으로 검색하면 지역 내에 있는 동물병원을 모두 출력합니다.\n예) 시군 시흥시\n"
+                 "지원하는 지역명: '가평군', '고양시', '과천시', '광명시', '광주시', '구리시', '군포시', '김포시', '남양주시', "
+                 "'동두천시', '부천시', '성남시', '수원시', '시흥시', '안산시', '안성시', '안양시', '양주시', '양평군', '여주시', "
+                 "'연천군', '오산시', '용인시', '의왕시', '의정부시', '이천시', '파주시', '평택시', '포천시', '하남시', '화성시'\n\n"
+                 "4. '즐겨찾기'를 입력해 내 즐겨찾기에 저장된 동물병원 정보를 볼 수 있습니다.\n\n"
+                 "5. 저장 + '동물병원명'으로 입력하면 즐겨찾기에 동물병원을 저장할 수 있습니다. \n예) 저장 가평동물병원")
         sendMessage(chat_id, guide)
     else:
-        guide = "1. '도움말'을 입력해 명령어를 찾아볼 수 있습니다. \n\n2. 검색 + '동물병원명'으로 검색하면 해당 동물병원 정보를 출력합니다.\n예) 검색 가평동물병원\
-            \n\n3. 시군 + '지역명'으로 검색하면 지역 내에 있는 동물병원을 모두 출력합니다.\n예) 시군 시흥시\
-            \n지원하는 지역명: '가평군', '고양시', '과천시', '광명시', '광주시', '구리시', '군포시', '김포시', '남양주시', '동두천시', '부천시', '성남시', '수원시', '시흥시', '안산시', '안성시', '안양시', '양주시', '양평군', '여주시', '연천군', '오산시', '용인시', '의왕시', '의정부시', '이천시', '파주시', '평택시', '포천시', '하남시', '화성시'\
-            \n\n4. '즐겨찾기'를 입력해 내 즐겨찾기에 저장된 동물병원 정보를 볼 수 있습니다.\n\n5. 저장 + '동물병원명'으로 입력하면 즐겨찾기에 동물병원을 저장할 수 있습니다. \n예) 저장 가평동물병원"
+        guide = ("1. '도움말'을 입력해 명령어를 찾아볼 수 있습니다. \n\n"
+                 "2. 검색 + '동물병원명'으로 검색하면 해당 동물병원 정보를 출력합니다.\n예) 검색 가평동물병원\n\n"
+                 "3. 시군 + '지역명'으로 검색하면 지역 내에 있는 동물병원을 모두 출력합니다.\n예) 시군 시흥시\n"
+                 "지원하는 지역명: '가평군', '고양시', '과천시', '광명시', '광주시', '구리시', '군포시', '김포시', '남양주시', "
+                 "'동두천시', '부천시', '성남시', '수원시', '시흥시', '안산시', '안성시', '안양시', '양주시', '양평군', '여주시', "
+                 "'연천군', '오산시', '용인시', '의왕시', '의정부시', '이천시', '파주시', '평택시', '포천시', '하남시', '화성시'\n\n"
+                 "4. '즐겨찾기'를 입력해 내 즐겨찾기에 저장된 동물병원 정보를 볼 수 있습니다.\n\n"
+                 "5. 저장 + '동물병원명'으로 입력하면 즐겨찾기에 동물병원을 저장할 수 있습니다. \n예) 저장 가평동물병원")
         sendMessage(chat_id, guide)
 
 today = date.today()

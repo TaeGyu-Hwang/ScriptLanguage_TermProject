@@ -8,15 +8,20 @@ functions
 - center_window
 '''
 
+# === import ===
+import sys
 from tkinter import *
 from tkinter import font
 
 # === main window ===
-window = Tk()
-window.title("가까운 동물병원")
-window.geometry("800x600+450+200")
-window.resizable(False, False)
-window.configure(bg='white')
+if not any(arg in sys.argv for arg in ('--no-gui', '-ng')) and 'telegram_bot' not in sys.argv[0]:
+    window = Tk()
+    window.title("가까운 동물병원")
+    window.geometry("800x600+450+200")
+    window.resizable(False, False)
+    window.configure(bg='white')
+else:
+    window = None
 
 # === center window ===
 def center_window(win):
@@ -24,33 +29,54 @@ def center_window(win):
     width = win.winfo_width()
     height = win.winfo_height()
     x = (win.winfo_screenwidth() // 2) - (width // 2)
-    y = (win.winfo_screenheight() // 2) - (height // 2) - 77
+    y = (win.winfo_screenheight() // 2) - (height // 2) - 50  # 화면 상단으로 50픽셀 더 이동
     win.geometry(f'{width}x{height}+{x}+{y}')
 
-center_window(window)
-
 # === load image ===
-searchImage = PhotoImage(file='image/search.png')               # search image
-filterImage = PhotoImage(file='image/filter_icon.png')          # filter image
-emailImage = PhotoImage(file='image/mail_icon3.png')            # mail image
-mapImage = PhotoImage(file='image/map_icon2.png')               # map image
-emptymarkImage = PhotoImage(file='image/white_bookmark.png')    # mark image
-markImage = PhotoImage(file='image/bookmark.png')               # mark image
-telegramImage = PhotoImage(file='image/telegram_icon.png')      # telegram image
-logoImage = PhotoImage(file='image/petlogo.png')                # logo image
-graphImage = PhotoImage(file='image/trend.png')                 # graph image
-noImage = PhotoImage(file='image/close.png')                    # no image
-labelImage = PhotoImage(file='image/label.png')                 # label image
-googleLinkImage = PhotoImage(file='image/google.png')           # label image
-naverImage = PhotoImage(file='image/naver.png')                 # label image
-naverMapImage = PhotoImage(file='image/google_map.png')         # label image
+if window:
+    searchImage = PhotoImage(file='image/search.png')               # search image
+    filterImage = PhotoImage(file='image/filter_icon.png')          # filter image
+    emailImage = PhotoImage(file='image/mail_icon3.png')            # mail image
+    mapImage = PhotoImage(file='image/map_icon2.png')               # map image
+    emptymarkImage = PhotoImage(file='image/white_bookmark.png')    # mark image
+    markImage = PhotoImage(file='image/bookmark.png')               # mark image
+    telegramImage = PhotoImage(file='image/telegram_icon.png')      # telegram image
+    logoImage = PhotoImage(file='image/petlogo.png')                # logo image
+    graphImage = PhotoImage(file='image/trend.png')                 # graph image
+    noImage = PhotoImage(file='image/close.png')                    # no image
+    labelImage = PhotoImage(file='image/label.png')                 # label image
+    googleLinkImage = PhotoImage(file='image/google.png')           # label image
+    naverImage = PhotoImage(file='image/naver.png')                 # label image
+    naverMapImage = PhotoImage(file='image/google_map.png')         # label image
+else:
+    searchImage = None
+    filterImage = None
+    emailImage = None
+    mapImage = None
+    emptymarkImage = None
+    markImage = None
+    telegramImage = None
+    logoImage = None
+    graphImage = None
+    noImage = None
+    labelImage = None
+    googleLinkImage = None
+    naverImage = None
+    naverMapImage = None
 
 # === load font ===
-fontNormal = font.Font(window, size=14, family='G마켓 산스 TTF Medium')
-fontLabel = font.Font(window, size=20, family='G마켓 산스 TTF Bold')
-fontGaggunPet = font.Font(window, size=24, family='G마켓 산스 TTF Medium')
-fontInfo = font.Font(window, size=10, family='G마켓 산스 TTF Medium')
-fontList = font.Font(window, size=14, family='G마켓 산스 TTF Medium')
+if window:
+    fontNormal = font.Font(window, size=14, family='G마켓 산스 TTF Medium')
+    fontLabel = font.Font(window, size=20, family='G마켓 산스 TTF Bold')
+    fontGaggunPet = font.Font(window, size=24, family='G마켓 산스 TTF Medium')
+    fontInfo = font.Font(window, size=10, family='G마켓 산스 TTF Medium')
+    fontList = font.Font(window, size=14, family='G마켓 산스 TTF Medium')
+else:
+    fontNormal = None
+    fontLabel = None
+    fontGaggunPet = None
+    fontInfo = None
+    fontList = None
 
 # === shared datas ===
 info_text = None        # 동물병원 정보
@@ -74,6 +100,7 @@ mouse_y = 0
 
 if __name__ == '__main__':
     print("server.py runned\n")
+    if window:
+        window.mainloop()
 else:
     print("server.py imported\n")
-

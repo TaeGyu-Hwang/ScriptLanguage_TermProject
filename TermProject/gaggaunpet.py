@@ -23,7 +23,7 @@ from tkinter.ttk import Notebook, Style
 from xml.etree import ElementTree
 
 from gmail_send import *
-import server
+from server import *
 from graph import *
 from map import *
 from telegram import *
@@ -34,6 +34,9 @@ from book_mark import *
 # === functions ===
 def InitScreen():  # 메인 GUI 창을 시작하는 함수
     # === frame arrangement ===
+
+    # 창을 중앙에 배치
+    center_window(window)
 
     # GaggunPet 텍스트 + 로고 이미지
     title_frame = Frame(window, bg="white", relief="solid", bd=2)
@@ -147,15 +150,6 @@ def InitScreen():  # 메인 GUI 창을 시작하는 함수
     link1.pack(pady=40)
     link2.pack(pady=10)
     link3.pack(pady=40)
-
-    # # notebook page3: 메모
-    # global memoST
-    # frame3 = Frame(window, background='white', relief='flat', borderwidth=0)
-    # memoST = st.ScrolledText(frame3, relief='raised', font=server.fontInfo)
-    # memoST.place(x=0, y=0, width=398, height=366)
-    # memoButton = Button(frame3, text='즐겨찾기 저장', command=saveMemo, font=server.fontInfo, cursor="hand2")
-    # memoButton.place(x=0, y=366, width=398, height=30)
-    # notebook.add(frame3, text="즐겨찾기")
 
     # bookmark data load
     dirpath = os.getcwd()
@@ -308,4 +302,5 @@ if __name__ == '__main__':
     window.mainloop()
 else:
     print("main launcher imported\n")
+
 
