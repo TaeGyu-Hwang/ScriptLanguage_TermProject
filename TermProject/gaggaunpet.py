@@ -125,8 +125,15 @@ def InitScreen():  # 메인 GUI 창을 시작하는 함수
     notebook.place(x=395, y=170, width=400, height=420)
 
     # notebook page1: 병원 정보 출력
-    ST = st.ScrolledText(window, font=server.fontInfo, cursor="arrow")
-    notebook.add(ST, text="정보")
+    info_frame = Frame(window, bg="white")
+    notebook.add(info_frame, text="정보")
+
+    ST = st.ScrolledText(info_frame, font=server.fontInfo, cursor="arrow")
+    ST.pack(fill=BOTH, expand=True)
+
+    # 즐겨찾기 저장 버튼을 정보 창 안에 배치
+    saveButton = Button(info_frame, text='즐겨찾기 저장', command=saveBookMark, font=server.fontInfo, cursor="hand2")
+    saveButton.pack(fill=X)
 
     # notebook page2: 링크 모음
     frame2 = Frame(window, background='white', relief='flat', borderwidth=0)
@@ -141,14 +148,14 @@ def InitScreen():  # 메인 GUI 창을 시작하는 함수
     link2.pack(pady=10)
     link3.pack(pady=40)
 
-    # notebook page3: 메모
-    global memoST
-    frame3 = Frame(window, background='white', relief='flat', borderwidth=0)
-    memoST = st.ScrolledText(frame3, relief='raised', font=server.fontInfo)
-    memoST.place(x=0, y=0, width=398, height=366)
-    memoButton = Button(frame3, text='즐겨찾기 저장', command=saveMemo, font=server.fontInfo, cursor="hand2")
-    memoButton.place(x=0, y=366, width=398, height=30)
-    notebook.add(frame3, text="즐겨찾기")
+    # # notebook page3: 메모
+    # global memoST
+    # frame3 = Frame(window, background='white', relief='flat', borderwidth=0)
+    # memoST = st.ScrolledText(frame3, relief='raised', font=server.fontInfo)
+    # memoST.place(x=0, y=0, width=398, height=366)
+    # memoButton = Button(frame3, text='즐겨찾기 저장', command=saveMemo, font=server.fontInfo, cursor="hand2")
+    # memoButton.place(x=0, y=366, width=398, height=30)
+    # notebook.add(frame3, text="즐겨찾기")
 
     # bookmark data load
     dirpath = os.getcwd()
@@ -184,10 +191,8 @@ def getStr(s):  # utitlity function: 문자열 내용 있을 때만 사용
     return '정보없음' if not s else s
 
 
-def saveMemo():  # 메모를 저장해 서버로 넘기는 함수
+def saveBookMark():  # 즐겨찾기 저장 함수
     if server.hospital_name:
-        server.memo_text = memoST.get("1.0", END)
-        memoST.delete('1.0', END)
         makeBookMark()
     else:
         msgbox.showinfo("알림", "목록에서 동물병원을 먼저 선택해주십시오.")

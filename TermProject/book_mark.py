@@ -19,11 +19,6 @@ from tkinter import *
 from tkinter import font
 import tkinter.scrolledtext as st
 
-# C/C++ 연동
-try:
-    import cLink
-except:
-    pass
 
 selHospital = None
 
@@ -109,10 +104,10 @@ def makeBookMark():
     # 런쳐 노트북 3페이지에서 즐겨찾기 저장 버튼을 눌렀을 시 실행
     if server.hospital_name:
         if server.hospital_name in server.MarkDict:
-            msgbox.showinfo("알림", "이미 즐겨찾기에 추가한 동물병원입니다.")
+            msgbox.showinfo("알림", "이미 즐겨찾기에 추가한 병원입니다.")
 
         else:
-            text = server.info_text + '\n\n' + '[MEMO]' + '\n' + server.memo_text
+            text = server.info_text
 
             dirpath = os.getcwd()
 
@@ -141,15 +136,11 @@ def makeBookMark():
 
                 print(server.MarkDict)
 
-            # C/C++ 연동
-            try:        # cLink.pyd 파일을 Lib에 추가시킨 경우
-                text = "성공적으로 즐겨찾기를 저장했습니다.\n메모 글자수: " + str(cLink.strlen(server.memo_text)) + "자"
-                msgbox.showinfo("알림", text)
-            except:     # cLink.pyd 파일을 Lib에 추가시키지 않은 경우
-                msgbox.showinfo("알림", "성공적으로 즐겨찾기를 저장했습니다.")
+            msgbox.showinfo("알림", "성공적으로 즐겨찾기를 저장했습니다.")
 
     else:   # 예외 처리
-        msgbox.showinfo("알림", "목록에서 동물병원을 먼저 선택해주십시오.")
+        msgbox.showinfo("알림", "목록에서 병원을 먼저 선택해주십시오.")
+
 
 if __name__ == '__main__':
     print("book_mark.py runned\n")
