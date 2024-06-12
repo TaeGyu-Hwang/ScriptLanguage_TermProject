@@ -64,9 +64,9 @@ def drawGraph(canvas, data, canvasWidth, canvasHeight):     # 받은 데이터�
 
     for i in range(nData):  # 각 데이터에 대해..
         # max/min은 특별한 색으로.
-        if nMax == data[i]: color = "skyblue3"
-        elif nMin == data[i]: color = 'light pink'
-        else: color = "ivory2"
+        if nMax == data[i]: color = "Blue"
+        elif nMin == data[i]: color = 'tomato'
+        else: color = "Green"
 
         curHeight = maxheight * data[i] / nMax  # 최대값에 대한 비율 반영
         top = bottom - curHeight  # bar의 top 위치
