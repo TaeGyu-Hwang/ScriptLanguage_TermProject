@@ -4,6 +4,7 @@ map.py
 
 functions
 - onMapPopup
+- get_coordinates
 - onSearch
 - onHospital
 - add_marker_event
@@ -15,6 +16,8 @@ import server
 import tkintermapview
 from tkinter import font
 import tkinter.messagebox as msgbox
+import requests
+from tkinter import messagebox
 
 # === load image ===
 hospitalImage = PhotoImage(file='image/hospital.png')               # 병원 아이콘
@@ -64,20 +67,51 @@ def onMapPopup():
 
         map_widget.set_zoom(15) # 0~19 (19 is the highest zoom level)
 
+def get_coordinates(address):
+    try:
+        url = f"https://nominatim.openstreetmap.org/search"
+        params = {
+            'q': address,
+            'format': 'json',
+            'addressdetails': 1,
+            'limit': 1
+        }
+        headers = {
+            'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.3'
+        }
+        response = requests.get(url, params=params, headers=headers)
+        response.raise_for_status()
+
+        results = response.json()
+        if results:
+            return float(results[0]['lat']), float(results[0]['lon'])
+        else:
+            return None, None
+    except requests.RequestException as e:
+        print(f"Error fetching coordinates: {e}")
+        return None, None
+
+
 def onSearch():
     # 지도 팝업에서 주소 입력 시 실행
     # 새 주소에 마커 추가
     global destAddr, marker_2
     destAddr = addressLabel.get()
-    marker_2 = map_widget.set_address(destAddr, marker=True, marker_color_outside="black", marker_color_circle="white", text_color="black")
-    marker_2.set_text(destAddr)
+    lat, lon = get_coordinates(destAddr)
 
-    path_1 = map_widget.set_path([marker_1.position, marker_2.position])
-    map_widget.set_position(server.latitude, server.longitude)
+    if lat is not None and lon is not None:
+        marker_2 = map_widget.set_marker(lat, lon, marker_color_outside="black", marker_color_circle="white",
+                                         text_color="black")
+        marker_2.set_text(destAddr)
+
+        path_1 = map_widget.set_path([marker_1.position, marker_2.position])
+        map_widget.set_position(server.latitude, server.longitude)
+        map_widget.set_zoom(15)
+    else:
+        messagebox.showinfo("알림", "해당 주소를 찾을 수 없습니다.")
 
     addressLabel.delete(0, 'end')
 
-    map_widget.set_zoom(15)
 
 def onHospital():   # 원래 병원 위치로 이동하는 함수
     map_widget.set_zoom(15)
