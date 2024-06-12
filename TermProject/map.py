@@ -19,15 +19,22 @@ import tkinter.messagebox as msgbox
 import requests
 from tkinter import messagebox
 
+# C 모듈 임포트
+try:
+    import distance
+except ImportError:
+    distance = None
+
 # === load image ===
-hospitalImage = PhotoImage(file='image/hospital.png')               # 병원 아이콘
-searchImage = PhotoImage(file='image/little_search.png')            # 돋보기 아이콘
+hospitalImage = PhotoImage(file='image/hospital.png')  # 병원 아이콘
+searchImage = PhotoImage(file='image/little_search.png')  # 돋보기 아이콘
+
 
 # === functions ===
 def onMapPopup():
     # 런처에서 지도 버튼을 누를 경우 실행
     # 선택한 병원의 지도를 보여주는 팝업을 띄움
-    if server.hospital_name == None:     # 예외처리: 사용자가 병원을 선택하지 않고, 버튼을 누를 경우
+    if server.hospital_name == None:  # 예외처리: 사용자가 병원을 선택하지 않고, 버튼을 누를 경우
         msgbox.showinfo("알림", "목록에서 병원을 먼저 선택해주십시오.")
         return
 
@@ -38,7 +45,7 @@ def onMapPopup():
 
     fontNormal = font.Font(popup, size=18, family='G마켓 산스 TTF Medium')
 
-    if server.latitude == 0 and server.longitude == 0:      # API에서 병원의 주소 정보를 제공하지 않는 경우
+    if server.latitude == 0 and server.longitude == 0:  # API에서 병원의 주소 정보를 제공하지 않는 경우
         emptyLabel = Label(popup, width=800, height=600, text="해당 병원의 지도 정보가 없습니다.", font=fontNormal)
         emptyLabel.pack()
 
@@ -50,8 +57,9 @@ def onMapPopup():
         map_widget.add_right_click_menu_command(label="위치 추가", command=add_marker_event, pass_coords=True)
 
         # 주소 위치지정
-        marker_1 = map_widget.set_position(server.latitude, server.longitude, marker=True, marker_color_outside="black", marker_color_circle="white", text_color="black") # 위도,경도 위치지정
-        marker_1.set_text(server.hospital_name) # set new text
+        marker_1 = map_widget.set_position(server.latitude, server.longitude, marker=True, marker_color_outside="black",
+                                           marker_color_circle="white", text_color="black")  # 위도,경도 위치지정
+        marker_1.set_text(server.hospital_name)  # set new text
 
         global addressLabel, InputButton, HospitalButton
         # 주소 입력 부분
@@ -62,10 +70,12 @@ def onMapPopup():
         InputButton.place(x=700, y=550, width=50, height=50)
 
         # 병원 버튼
-        HospitalButton = Button(popup, font=fontNormal, image=hospitalImage, command=onHospital, bg="white", cursor="hand2")
+        HospitalButton = Button(popup, font=fontNormal, image=hospitalImage, command=onHospital, bg="white",
+                                cursor="hand2")
         HospitalButton.place(x=750, y=550, width=50, height=50)
 
-        map_widget.set_zoom(15) # 0~19 (19 is the highest zoom level)
+        map_widget.set_zoom(15)  # 0~19 (19 is the highest zoom level)
+
 
 def get_coordinates(address):
     try:
@@ -113,15 +123,21 @@ def onSearch():
     addressLabel.delete(0, 'end')
 
 
-def onHospital():   # 원래 병원 위치로 이동하는 함수
+def onHospital():  # 원래 병원 위치로 이동하는 함수
     map_widget.set_zoom(15)
     map_widget.set_position(marker_1.position[0], marker_1.position[1])
 
-def add_marker_event(coords):       # 마우스 우클릭으로 마커를 추가하는 함수
+
+def add_marker_event(coords):  # 마우스 우클릭으로 마커를 추가하는 함수
     print("위치 추가:", coords)
     new_marker = map_widget.set_marker(coords[0], coords[1], text="현재 위치")
     map_widget.set_path([coords, marker_1.position])
-    
+
+    if distance is not None:
+        dist = distance.haversine(server.latitude, server.longitude, coords[0], coords[1])
+        msgbox.showinfo("거리 계산", f"동물병원과 추가된 위치 사이의 거리: {dist:.2f} km")
+
+
 if __name__ == '__main__':
     print("map.py runned\n")
 else:
