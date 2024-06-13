@@ -35,7 +35,7 @@ def getStr(s):  # utitlity function: 문자열 내용 있을 때만 사용
 
 # === noti part ===
 key = 'b40a9f7c2d06486a83a9fdbfa6e3437e'
-TOKEN = '7225196729:AAEQw5Ge5PcGwp35SroFtsAaG85Vrka8XWE'
+TOKEN = ''
 MAX_MSG_LENGTH = 300
 baseurl = 'https://openapi.gg.go.kr/Animalhosptl?pSize=1000&pIndex=1&KEY=' + key
 bot = telepot.Bot(TOKEN)
@@ -202,38 +202,52 @@ def handle(msg):  # 대화에 반응하는 함수
     text = msg['text']
     args = text.split(' ')
 
-    if text.startswith('시군') and len(args) > 1:
-        print('try to 시군', args[1])
-        replyAptData(chat_id, args[1])
-    elif text.startswith('검색') and len(args) > 1:
-        print('try to 검색', args[1])
-        findHospital(chat_id, args[1])
-    elif text.startswith('즐겨찾기'):
-        print('try to 즐겨찾기')
-        getBookMark(chat_id)
-    elif text.startswith('저장') and len(args) > 1:
-        print('try to 저장', args[1])
-        addBookMark(chat_id, args[1])
-    elif text.startswith('도움말'):
-        guide = ("1. '도움말'을 입력해 명령어를 찾아볼 수 있습니다. \n\n"
-                 "2. 검색 + '동물병원명'으로 검색하면 해당 동물병원 정보를 출력합니다.\n예) 검색 가평동물병원\n\n"
-                 "3. 시군 + '지역명'으로 검색하면 지역 내에 있는 동물병원을 모두 출력합니다.\n예) 시군 시흥시\n"
-                 "지원하는 지역명: '가평군', '고양시', '과천시', '광명시', '광주시', '구리시', '군포시', '김포시', '남양주시', "
-                 "'동두천시', '부천시', '성남시', '수원시', '시흥시', '안산시', '안성시', '안양시', '양주시', '양평군', '여주시', "
-                 "'연천군', '오산시', '용인시', '의왕시', '의정부시', '이천시', '파주시', '평택시', '포천시', '하남시', '화성시'\n\n"
-                 "4. '즐겨찾기'를 입력해 내 즐겨찾기에 저장된 동물병원 정보를 볼 수 있습니다.\n\n"
-                 "5. 저장 + '동물병원명'으로 입력하면 즐겨찾기에 동물병원을 저장할 수 있습니다. \n예) 저장 가평동물병원")
-        sendMessage(chat_id, guide)
+    region_list = ['가평군', '고양시', '과천시', '광명시', '광주시', '구리시', '군포시', '김포시', '남양주시',
+                   '동두천시', '부천시', '성남시', '수원시', '시흥시', '안산시', '안성시', '안양시', '양주시',
+                   '양평군', '여주시', '연천군', '오산시', '용인시', '의왕시', '의정부시', '이천시', '파주시',
+                   '평택시', '포천시', '하남시', '화성시']
+
+    if text in region_list:
+        print('try to 시군', text)
+        replyAptData(chat_id, text)
+    elif any(text.startswith(keyword) for keyword in ['검색', '즐겨찾기', 'help']):
+        if text.startswith('검색'):
+            if len(args) > 1:
+                print('try to 검색', args[1])
+                findHospital(chat_id, args[1])
+            else:
+                sendMessage(chat_id, '검색할 동물병원명을 입력해주세요.')
+        elif text.startswith('즐겨찾기'):
+            if len(args) > 1:
+                print('try to 즐겨찾기', args[1])
+                addBookMark(chat_id, args[1])
+            else:
+                print('try to 즐겨찾기')
+                getBookMark(chat_id)
+        elif text.startswith('help'):
+            guide = ("1. 'help'를 입력해 명령어를 찾아볼 수 있습니다. \n\n"
+                     "2. 동물병원명을 입력하면 해당 동물병원 정보를 출력합니다.\n예) 배곧동물병원\n\n"
+                     "3. 지역명을 입력하면 해당 지역 내에 있는 동물병원을 모두 출력합니다.\n예) 시흥시\n"
+                     "지원하는 지역명: '가평군', '고양시', '과천시', '광명시', '광주시', '구리시', '군포시', '김포시', '남양주시', "
+                     "'동두천시', '부천시', '성남시', '수원시', '시흥시', '안산시', '안성시', '안양시', '양주시', '양평군', '여주시', "
+                     "'연천군', '오산시', '용인시', '의왕시', '의정부시', '이천시', '파주시', '평택시', '포천시', '하남시', '화성시'\n\n"
+                     "4. '즐겨찾기'를 입력해 내 즐겨찾기에 저장된 동물병원 정보를 볼 수 있습니다.\n\n"
+                     "5. 즐겨찾기 + '동물병원명'으로 입력하면 즐겨찾기에 동물병원을 저장할 수 있습니다. \n예) 즐겨찾기 배곧동물병원")
+            sendMessage(chat_id, guide)
     else:
-        guide = ("1. '도움말'을 입력해 명령어를 찾아볼 수 있습니다. \n\n"
-                 "2. 검색 + '동물병원명'으로 검색하면 해당 동물병원 정보를 출력합니다.\n예) 검색 가평동물병원\n\n"
-                 "3. 시군 + '지역명'으로 검색하면 지역 내에 있는 동물병원을 모두 출력합니다.\n예) 시군 시흥시\n"
-                 "지원하는 지역명: '가평군', '고양시', '과천시', '광명시', '광주시', '구리시', '군포시', '김포시', '남양주시', "
-                 "'동두천시', '부천시', '성남시', '수원시', '시흥시', '안산시', '안성시', '안양시', '양주시', '양평군', '여주시', "
-                 "'연천군', '오산시', '용인시', '의왕시', '의정부시', '이천시', '파주시', '평택시', '포천시', '하남시', '화성시'\n\n"
-                 "4. '즐겨찾기'를 입력해 내 즐겨찾기에 저장된 동물병원 정보를 볼 수 있습니다.\n\n"
-                 "5. 저장 + '동물병원명'으로 입력하면 즐겨찾기에 동물병원을 저장할 수 있습니다. \n예) 저장 가평동물병원")
-        sendMessage(chat_id, guide)
+        if text:
+            print('try to 검색', text)
+            findHospital(chat_id, text)
+        else:
+            guide = ("1. 'help'를 입력해 명령어를 찾아볼 수 있습니다. \n\n"
+                     "2. 동물병원명을 입력하면 해당 동물병원 정보를 출력합니다.\n예) 배곧동물병원\n\n"
+                     "3. 지역명을 입력하면 해당 지역 내에 있는 동물병원을 모두 출력합니다.\n예) 시흥시\n"
+                     "지원하는 지역명: '가평군', '고양시', '과천시', '광명시', '광주시', '구리시', '군포시', '김포시', '남양주시', "
+                     "'동두천시', '부천시', '성남시', '수원시', '시흥시', '안산시', '안성시', '안양시', '양주시', '양평군', '여주시', "
+                     "'연천군', '오산시', '용인시', '의왕시', '의정부시', '이천시', '파주시', '평택시', '포천시', '하남시', '화성시'\n\n"
+                     "4. '즐겨찾기'를 입력해 내 즐겨찾기에 저장된 동물병원 정보를 볼 수 있습니다.\n\n"
+                     "5. 즐겨찾기 + '동물병원명'으로 입력하면 즐겨찾기에 동물병원을 저장할 수 있습니다. \n예) 즐겨찾기 배곧동물병원")
+            sendMessage(chat_id, guide)
 
 today = date.today()
 current_month = today.strftime('%Y%m')

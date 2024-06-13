@@ -23,7 +23,7 @@ def sendMail(fromAddr, toAddr, msg):    # SMTP 연결로 메일을 보내는 함
         s.starttls() # SMTP 연결을 TLS (Transport Layer Security) 모드로전환
 
         # 앱 비밀번호 이용
-        s.login('hwg4906@gmail.com', 'kozp kuzf zpig atyd')  # 여기에 앱 비밀번호를 입력하세요.
+        s.login('hwg4906@gmail.com', '')  # 여기에 앱 비밀번호를 입력하세요.
         s.sendmail(fromAddr , [toAddr], msg.as_string())
         s.close()
     except Exception as e:
