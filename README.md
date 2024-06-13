@@ -1,6 +1,6 @@
 # 가까운 동물병원: Gaggun Pet
 ![logo](https://github.com/tg-hwg/ScriptLanguage_TermProject/assets/130235390/16909e40-1f97-4ff3-bb7e-66307c8178b9)
-#### 한국공학대학교 게임공학과 2024학년도 1학기 스크입트 언어 과목의 Term Project입니다.
+#### 한국공학대학교 게임공학과 2024학년도 1학기 스크입트 언어 과목의 텀 프로젝트입니다.
 Member: [2020180045 황태규]
 
 ## 목차
