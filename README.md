@@ -84,4 +84,6 @@ Member: [2020180045 황태규]
 - 앱 비밀번호를 사용하여 송신하였기 때문에 같은 @gmail.com인 경우에만 가능합니다.
 
 ## 발표 영상
+- [기획 발표](https://youtu.be/n8QqFsehk5U)
+- [중간 발표](https://youtu.be/0DlJKE-M1qM)
 - [최종 발표](https://youtu.be/8-mDzimKM_U)
